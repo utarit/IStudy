@@ -9,6 +9,8 @@ import {
 import { Button } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 import QuoteView from '../components/QuoteView';
+import { Subscribe } from 'unstated';
+import StateContainer from '../state/StateContainer';
 
 let timer;
 const quotes = [
@@ -29,54 +31,54 @@ export default class TimerScreen extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            minutes: 25, //THIS IS GONNA CHANGE
+            minutes: 25,
             seconds: 0,
             clockIsOn: false,
             quote: "Let's start!"
         }
     }
 
-    incrementMin = () => {
-        this.setState((state) => {
-            if (state.minutes < 120) {
-                return { minutes: state.minutes + 5 }
-            } else {
-                return state
-            }
+    // incrementMin = () => {
+    //     this.setState((state) => {
+    //         if (state.minutes < 120) {
+    //             return { minutes: state.minutes + 5 }
+    //         } else {
+    //             return state
+    //         }
 
-        })
-    }
+    //     })
+    // }
 
 
-    decrementMin = () => {
-        this.setState((state) => {
-            if (state.minutes > 5) {
-                return { minutes: state.minutes - 5 }
-            } else {
-                return state
-            }
-        })
-    }
+    // decrementMin = () => {
+    //     this.setState((state) => {
+    //         if (state.minutes > 5) {
+    //             return { minutes: state.minutes - 5 }
+    //         } else {
+    //             return state
+    //         }
+    //     })
+    // }
 
-    startClock = () => {
-        this.setState({ clockIsOn: true })
-        timer = setInterval(() => {
-            this.setState((state) => {
-                if (state.minutes == 0 && state.seconds == 0) {
-                    clearInterval(timer)
-                    return { clockIsOn: false }
-                } else if (state.seconds == 0) {
-                    if (state.minutes % 2 == 0) {
-                        let index = Math.floor(Math.random() * quotes.length)
-                        return { minutes: state.minutes - 1, seconds: 59, quote: quotes[index] }
-                    }
-                    return { minutes: state.minutes - 1, seconds: 59 }
-                } else {
-                    return { seconds: state.seconds - 1 }
-                }
-            })
-        }, 1000)
-    }
+    // startClock = () => {
+    //     this.setState({ clockIsOn: true })
+    //     timer = setInterval(() => {
+    //         this.setState((state) => {
+    //             if (state.minutes == 0 && state.seconds == 0) {
+    //                 clearInterval(timer)
+    //                 return { clockIsOn: false }
+    //             } else if (state.seconds == 0) {
+    //                 if (state.minutes % 2 == 0) {
+    //                     let index = Math.floor(Math.random() * quotes.length)
+    //                     return { minutes: state.minutes - 1, seconds: 59, quote: quotes[index] }
+    //                 }
+    //                 return { minutes: state.minutes - 1, seconds: 59 }
+    //             } else {
+    //                 return { seconds: state.seconds - 1 }
+    //             }
+    //         })
+    //     }, 1000)
+    // }
 
     formatNumber = (d) => {
         return (d < 10) ? '0' + d.toString() : d.toString();
@@ -85,28 +87,32 @@ export default class TimerScreen extends React.Component {
     render() {
 
         return (
-            <View style={styles.outerContainer}>
+            <Subscribe to={[StateContainer]}> 
+            {timer => (
+                <View style={styles.outerContainer}>
                 <View style={styles.upperContainer}>
                     <View style={styles.circle}>
-                        <Text style={styles.timer}>{`${this.formatNumber(this.state.minutes)}:${this.formatNumber(this.state.seconds)}`}</Text>
+                        <Text style={styles.timer}>{`${this.formatNumber(timer.state.minutes)}:${this.formatNumber(timer.state.seconds)}`}</Text>
                     </View>
                 </View>
                 <View style={styles.lowerContainer}>
-                    {this.state.clockIsOn ?
-                        <QuoteView key={this.state.quote} style={styles.quotesContainer} quote={this.state.quote} /> :
+                    {timer.state.clockIsOn ?
+                        <QuoteView key={timer.state.quote} style={styles.quotesContainer} quote={timer.state.quote} /> :
                         <View>
                             <View style={styles.buttonContainer}>
-                                <TouchableOpacity onPress={this.decrementMin} ><Ionicons name="md-remove-circle" size={40} color="red" /></TouchableOpacity>
+                                <TouchableOpacity onPress={timer.decrementMin} ><Ionicons name="md-remove-circle" size={40} color="red" /></TouchableOpacity>
                                 <Text style={{ fontSize: 20 }}>  5 min  </Text>
-                                <TouchableOpacity onPress={this.incrementMin}><Ionicons name="md-add-circle" size={40} color="green" /></TouchableOpacity>
+                                <TouchableOpacity onPress={timer.incrementMin}><Ionicons name="md-add-circle" size={40} color="green" /></TouchableOpacity>
                             </View>
                             <View style={styles.startButtonContainer}>
-                                <Button light style={{paddingHorizontal: 22}} onPress={this.startClock}><Text style={{fontSize:18}}> START </Text></Button>
+                                <Button light style={{paddingHorizontal: 22}} onPress={timer.startClock}><Text style={{fontSize:18}}> START </Text></Button>
                             </View>
                         </View>}
                 </View>
-
             </View>
+            )}
+            </Subscribe>
+
 
         )
     }

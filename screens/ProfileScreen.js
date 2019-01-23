@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 import { Subscribe } from 'unstated';
-import ProfileContainer from '../state/ProfileContainer';
+import StateContainer from '../state/StateContainer';
 
 // const profile = {
 //     username: "utarit",
@@ -22,29 +22,41 @@ export default class ProfileScreen extends React.Component {
         title: 'Profile',
     };
 
-    render() {
 
-        // const date = new Date(Date.now());
-        // profile.studyHistory[date.toDateString()] = 150
-        // console.log(profile.studyHistory)
+
+    studyList = (history) => {
+        const hist = Object.entries(history)
+        return hist.map((entry) => (
+            <Text key={entry[0]}>{entry[0]}: {entry[1]}</Text>
+        ))
+        
+    }
+
+    render() {
 
         return (
 
-            <Subscribe to={[ProfileContainer]}>
+            <Subscribe to={[StateContainer]}>
                 {
                     (profile) => {
                         console.log(profile)
                         return (
-                            <View style={styles.outerContainer}>
-                                <View>
-                                    <Image source={profile.state.profile_pic} />
+                            <View>
+                                <View style={styles.outerContainer}>
+                                    <View>
+                                        <Image source={require("../assets/robot.png")} />
+                                    </View>
+                                    <View>
+                                        <Text><Text style={styles.headerText}>Name: </Text>{profile.state.username}</Text>
+                                        <Text><Text style={styles.headerText}>Study Group: </Text> {profile.state.studyGroup}</Text>
+                                        <Text><Text style={styles.headerText}>Points: </Text>{profile.state.points}</Text>
+                                    </View>
                                 </View>
                                 <View>
-                                    <Text><Text style={styles.headerText}>Name: </Text>{profile.state.username}</Text>
-                                    <Text><Text style={styles.headerText}>Study Group: </Text> {profile.state.studyGroup}</Text>
-                                    <Text><Text style={styles.headerText}>Points: </Text>{profile.state.points}</Text>
+                                    {this.studyList(profile.state.studyHistory)}
                                 </View>
                             </View>
+
 
                         )
                     }
