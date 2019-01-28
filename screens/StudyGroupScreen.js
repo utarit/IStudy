@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text} from 'react-native';
+import {Text, StyleSheet, View} from 'react-native';
 
 
 
@@ -11,7 +11,18 @@ export default class StudyGroupScreen extends React.Component {
     render(){
 
         return(
-            <Text>This is Study Group</Text>
+            <View style={styles.outerView}>
+                <Text>This screen will be implemented.</Text>
+            </View>
+            
         )
     }
 } 
+
+const styles = StyleSheet.create({
+    outerView: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex: 1
+    }
+})

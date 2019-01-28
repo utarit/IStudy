@@ -1,5 +1,5 @@
 import { Container } from 'unstated';
-
+import { AsyncStorage} from 'react-native';
 
 class StateContainer extends Container {
     state = {
@@ -7,11 +7,16 @@ class StateContainer extends Container {
         points: 140,
         studyGroup: 'CengoTayfa',
         studyHistory: {
-            "Mon Jan 21 2019": 50,
+            "Tue Jan 27 2019": 120,
             "Tue Jan 22 2019": 120,
+            "Wed Jan 16 2019": 150,
+            "Fri Jan 18 2019": 25,
+            "Sat Jan 19 2019": 70,
+            "Mon Jan 21 2017": 50,
+            "Tue Feb 22 2019": 120,
             "Wed Jan 23 2019": 30,
         },
-        minutes: 1,
+        minutes: 25,
         seconds: 0,
         clockIsOn: false,
         quote: "",
@@ -26,6 +31,31 @@ class StateContainer extends Container {
         ]
 
     }
+
+    _writeState = async (tmp) => {
+        try {
+            //let tmp = {...this.state, clockIsOn: false, minutes: 25}
+            await AsyncStorage.setItem('HubData', JSON.stringify(tmp));
+            console.log('WRITTEN: ', tmp)
+          } catch (error) {
+            console.log('ERROR: ', error)
+          }
+    }
+
+    _retrieveData = async () => {
+        try {
+          const value = await AsyncStorage.getItem('HubData');
+          if (value !== null) {
+            // We have data!!
+            this.setState(JSON.parse(value));
+            console.log('RETRIEVED!')
+            console.log('DATA:', value);
+          }
+         } catch (error) {
+           // Error retrieving data
+           console.log('ERROR: ', error)
+         }
+      }
 
     incrementMin = () => {
         this.setState((state) => {
@@ -70,7 +100,7 @@ class StateContainer extends Container {
                     return { seconds: state.seconds - 1 }
                 }
             })
-        }, 250) //1000 olacak burası!!
+        }, 100) //1000 olacak burası!!
     }
 
     gainPoints = (point) => {
@@ -81,7 +111,9 @@ class StateContainer extends Container {
             tmp[dateStr] = 0
         }
         tmp[dateStr] += point
-        this.setState(state => ({ studyHistory: tmp, points: state.points + point }))
+        tmp = {...tmp, studyHistory: tmp, points: this.state.points + point}
+        this.setState(state => (tmp))
+        this._writeState(tmp)
     }
 }
 
