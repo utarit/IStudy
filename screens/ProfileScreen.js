@@ -4,10 +4,12 @@ import {
     View,
     Image,
     StyleSheet,
+    ScrollView,
     ImageBackground,
     TouchableOpacity
 
 } from 'react-native';
+import { Icon } from 'native-base';
 import { Subscribe } from 'unstated';
 import PureChart from 'react-native-pure-chart';
 import StateContainer from '../state/StateContainer';
@@ -36,7 +38,7 @@ function isEarly(a, b) {
 
 export default class ProfileScreen extends React.Component {
     static navigationOptions = {
-        title: 'Profile',
+        header: null
     };
 
 
@@ -89,36 +91,36 @@ export default class ProfileScreen extends React.Component {
                         // console.log("DATA: ", historyData)
                         // console.log("SORTED: ",historyDataSorted)
                         return (
-                            <View>
-                                <View>
-                                    <ImageBackground style={{width: '100%'}} source={require("../assets/pp_back.jpg")} >
-                                        <View style={styles.profileContainer}>
-                                            <View style={styles.imageContainer}>
-                                            <TouchableOpacity
-                                            style={styles.imageBorder} >
-                                            <Image style={{resizeMode: 'contain', width: '80%'}} source={require("../assets/robot.png")} />
+                            <ScrollView
+                                scrollEnabled={true}
+                                style={{ flex: 1 }}
+                            >
+                                <View style={{ flex: 2, marginBottom: 20, marginBottom: 100 }}>
+                                    <ImageBackground style={{ width: '100%' }} source={require("../assets/pp_back.jpg")} >
+                                        <View style={styles.infoContainer}>
+                                            <Text style={{ fontSize: 50, fontWeight: 'bold', color: 'white' }}>{profile.state.username}</Text>
+                                            <Text style={{ color: 'white', fontWeight: 'bold' }}>{profile.state.studyGroup}</Text>
+                                            <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 5}}>
+                                                <Icon type="AntDesign" name="star" style={{ color: 'white', fontSize: 20 }} />
+                                                <Text style={{ color: 'white', fontWeight: 'bold' }}> {profile.state.points}</Text>
+                                            </View>
+                                        </View>
+                                        <View style={styles.imageContainer}>
+                                            <TouchableOpacity style={styles.imageBorder} >
+                                                <Image style={{ resizeMode: 'contain', width: '80%' }} source={require("../assets/robot.png")} />
                                             </TouchableOpacity>
-                                                
-                                            </View>
-                                            <View style={styles.infoContainer}>
-                                                <Text><Text style={styles.headerText}>Name: </Text>{profile.state.username}</Text>
-                                                <Text><Text style={styles.headerText}>Study Group: </Text> {profile.state.studyGroup}</Text>
-                                                <Text><Text style={styles.headerText}>Points: </Text>{profile.state.points}</Text>
-                                            </View>
                                         </View>
                                     </ImageBackground>
 
                                 </View>
 
-
-
                                 <View styles={styles.chartContainer}>
+                                <Text style={{fontSize: 30, marginLeft: 30, marginBottom: 15}}>Study History</Text>
                                     <PureChart
                                         numberOfYAxisGuideLine={10}
                                         height={200}
                                         data={historyDataSorted}
                                         type='line'
-                                        primaryColor='#00FF00'
                                         showEvenNumberXaxisLabel={true}
                                         gap={50}
                                     // customValueRenderer={(index, point) => {
@@ -129,7 +131,8 @@ export default class ProfileScreen extends React.Component {
                                     //   }}
                                     />
                                 </View>
-                            </View>
+
+                            </ScrollView>
                         )
                     }
                 }
@@ -146,27 +149,30 @@ const styles = StyleSheet.create({
         padding: 20,
         marginBottom: 20
     },
-    imageBorder:{
-        borderWidth:1,
-        borderColor:'rgba(0,0,0,0.2)',
-        alignItems:'center',
-        justifyContent:'center',
-        width:120,
-        height:120,
-        backgroundColor:'#fff',
-        borderRadius:150,
+    imageBorder: {
+        borderWidth: 1,
+        borderColor: 'rgba(0,0,0,0.2)',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 120,
+        height: 120,
+        backgroundColor: '#fff',
+        borderRadius: 150,
         overflow: 'hidden',
-      },
+    },
     headerText: {
         fontWeight: 'bold'
     },
     imageContainer: {
-        marginRight: 10
+        position: 'relative',
+        bottom: -60,
+        left: 130,
     },
     infoContainer: {
-
+        alignItems: 'center',
+        paddingTop: 10,
     },
     chartContainer: {
-
+        flex: 1,
     }
 })
