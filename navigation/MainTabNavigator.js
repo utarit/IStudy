@@ -6,6 +6,7 @@ import { Icon } from 'native-base'
 import TimerScreen from '../screens/TimerScreen';
 import StudyGroupScreen from '../screens/StudyGroupScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import QuoteScreen from '../screens/QuoteScreen';
 
 const TimerStack = createStackNavigator({
   Home: TimerScreen,
@@ -31,6 +32,7 @@ TimerStack.navigationOptions = {
 
 const ProfileStack = createStackNavigator({
   Home: ProfileScreen,
+  Quotes: QuoteScreen
 
 })
 

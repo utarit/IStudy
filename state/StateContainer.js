@@ -154,6 +154,31 @@ class StateContainer extends Container {
         return tmp
         
     }
+
+    _updateData = async (newState) => {
+        try {
+            await AsyncStorage.setItem('HubData', JSON.stringify(newState));
+            console.log('QUOTE: ', defaultState)
+          } catch (error) {
+            console.log('ERROR: ', error)
+          }
+    }
+
+    addQuote = (quote) => {
+        let tmp = this.state.quotes
+        tmp.push(quote)
+        this.setState({quotes: tmp})
+        let tmpState = {...this.state, quotes: tmp}
+        this._updateData(tmpState)
+    }
+
+    removeQuote = (index) => {
+        let tmp = this.state.quotes
+        tmp.splice(index, 1)
+        this.setState({quotes: tmp})
+        let tmpState = {...this.state, quotes: tmp}
+        this._updateData(tmpState)
+    }
 }
 
 export default StateContainer

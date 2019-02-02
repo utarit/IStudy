@@ -139,7 +139,11 @@ export default class ProfileScreen extends React.Component {
                                     />
                                 </View>
                                 <TouchableOpacity onPress={profile.resetData}><Text>RESET DATA</Text></TouchableOpacity>
-
+                                <TouchableOpacity onPress={
+                                    () => {
+                                        this.props.navigation.navigate('Quotes')
+                                    }
+                                }><Text>QUOTES</Text></TouchableOpacity>
                             </ScrollView>
                         )
                     }
