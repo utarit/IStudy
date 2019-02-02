@@ -6,10 +6,11 @@ import {
     StyleSheet,
     ScrollView,
     ImageBackground,
-    TouchableOpacity
+    TouchableOpacity,
+    Dimensions
 
 } from 'react-native';
-import { Icon } from 'native-base';
+import { Icon, Button } from 'native-base';
 import { Subscribe } from 'unstated';
 import PureChart from 'react-native-pure-chart';
 import StateContainer from '../state/StateContainer';
@@ -21,6 +22,8 @@ import StateContainer from '../state/StateContainer';
 //     studyHistory: {}
 // }
 
+const ppWidth = 120
+const {height, width} = Dimensions.get('window');
 
 function isEarly(a, b) {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -38,7 +41,8 @@ function isEarly(a, b) {
 
 export default class ProfileScreen extends React.Component {
     static navigationOptions = {
-        header: null
+        header: null,
+        // title: 'Profile',
     };
 
 
@@ -62,6 +66,8 @@ export default class ProfileScreen extends React.Component {
             <Subscribe to={[StateContainer]}>
                 {
                     (profile) => {
+                        
+
                         const historyData = Object.entries(profile.state.studyHistory).map(entry => {
                             let labelArr = entry[0].split(' ')
                             let label = labelArr[2] + " " + labelArr[1] + " '" + labelArr[3].substr(2)
@@ -95,7 +101,7 @@ export default class ProfileScreen extends React.Component {
                                 scrollEnabled={true}
                                 style={{ flex: 1 }}
                             >
-                                <View style={{ flex: 2, marginBottom: 20, marginBottom: 100 }}>
+                                <View style={styles.profileContainer}>
                                     <ImageBackground style={{ width: '100%' }} source={require("../assets/pp_back.jpg")} >
                                         <View style={styles.infoContainer}>
                                             <Text style={{ fontSize: 50, fontWeight: 'bold', color: 'white' }}>{profile.state.username}</Text>
@@ -117,6 +123,7 @@ export default class ProfileScreen extends React.Component {
                                 <View styles={styles.chartContainer}>
                                 <Text style={{fontSize: 30, marginLeft: 30, marginBottom: 15}}>Study History</Text>
                                     <PureChart
+                                        clock={profile.state.clockIsOn}
                                         numberOfYAxisGuideLine={10}
                                         height={200}
                                         data={historyDataSorted}
@@ -131,6 +138,7 @@ export default class ProfileScreen extends React.Component {
                                     //   }}
                                     />
                                 </View>
+                                <TouchableOpacity onPress={profile.resetData}><Text>RESET DATA</Text></TouchableOpacity>
 
                             </ScrollView>
                         )
@@ -143,19 +151,18 @@ export default class ProfileScreen extends React.Component {
 
 
 const styles = StyleSheet.create({
-    profileContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        padding: 20,
-        marginBottom: 20
+    profileContainer: { 
+        flex: 2, 
+        marginBottom: 20, 
+        marginBottom: 100 
     },
     imageBorder: {
         borderWidth: 1,
         borderColor: 'rgba(0,0,0,0.2)',
         alignItems: 'center',
         justifyContent: 'center',
-        width: 120,
-        height: 120,
+        width: ppWidth,
+        height: ppWidth,
         backgroundColor: '#fff',
         borderRadius: 150,
         overflow: 'hidden',
@@ -166,7 +173,7 @@ const styles = StyleSheet.create({
     imageContainer: {
         position: 'relative',
         bottom: -60,
-        left: 130,
+        left: width/2 - ppWidth/2,
     },
     infoContainer: {
         alignItems: 'center',

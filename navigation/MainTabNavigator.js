@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
-import {Icon} from 'native-base'
+import { Icon } from 'native-base'
 
 import TimerScreen from '../screens/TimerScreen';
 import StudyGroupScreen from '../screens/StudyGroupScreen';
@@ -18,19 +18,20 @@ TimerStack.navigationOptions = {
   ),
 };
 
-const StudyGroupStack = createStackNavigator({
-  Home: StudyGroupScreen,
-})
+// const StudyGroupStack = createStackNavigator({
+//   Home: StudyGroupScreen,
+// })
 
-StudyGroupStack.navigationOptions = {
-  tabBarLabel: 'Study Group',
-  tabBarIcon: ({focused}) => (
-      <Icon type="MaterialCommunityIcons" name="account-group" focused={focused} />
-  )
-}
+// StudyGroupStack.navigationOptions = {
+//   tabBarLabel: 'Study Group',
+//   tabBarIcon: ({focused}) => (
+//       <Icon type="MaterialCommunityIcons" name="account-group" focused={focused} />
+//   )
+// }
 
 const ProfileStack = createStackNavigator({
-  Home: ProfileScreen
+  Home: ProfileScreen,
+
 })
 
 ProfileStack.navigationOptions = {
@@ -43,6 +44,6 @@ ProfileStack.navigationOptions = {
 
 export default createBottomTabNavigator({
   TimerStack,
-  StudyGroupStack,
+  // StudyGroupStack,
   ProfileStack
 });

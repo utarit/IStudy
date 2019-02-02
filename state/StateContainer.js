@@ -10,10 +10,8 @@ class StateContainer extends Container {
             "Tue Jan 27 2019": 120,
             "Tue Jan 22 2019": 120,
             "Wed Jan 16 2019": 150,
-            "Fri Jan 18 2019": 25,
             "Sat Jan 19 2019": 70,
             "Mon Jan 21 2017": 50,
-            "Tue Feb 22 2019": 120,
             "Wed Jan 23 2019": 30,
         },
         minutes: 25,
@@ -34,9 +32,11 @@ class StateContainer extends Container {
 
     _writeState = async (tmp) => {
         try {
-            //let tmp = {...this.state, clockIsOn: false, minutes: 25}
-            await AsyncStorage.setItem('HubData', JSON.stringify(tmp));
-            console.log('WRITTEN: ', tmp)
+            const strData = await AsyncStorage.getItem('HubData');
+            const value = JSON.parse(strData)
+            value['studyHistory'] = tmp
+            await AsyncStorage.setItem('HubData', JSON.stringify(value));
+            console.log('WRITTEN: ', value)
           } catch (error) {
             console.log('ERROR: ', error)
           }
@@ -79,6 +79,45 @@ class StateContainer extends Container {
         })
     }
 
+    resetData = async () => {
+        const defaultState = {
+            username: "utarit",
+            points: 140,
+            studyGroup: 'CengoTayfa',
+            studyHistory: {
+                "Tue Jan 27 2019": 120,
+                "Tue Jan 22 2019": 120,
+                "Wed Jan 16 2019": 150,
+                "Sat Jan 19 2019": 70,
+                "Mon Jan 21 2017": 50,
+                "Wed Jan 23 2019": 30,
+            },
+            minutes: 25,
+            seconds: 0,
+            clockIsOn: false,
+            quote: "",
+            quotes: [
+                'JUST DO IT!',
+                'Your friends are not dying!',
+                'Stay away your Whatsapp. Nobody is having a party',
+                'Do not think the big picture. Focus on small goals.',
+                'When you finish this, you may look up the news.',
+                'Why are you looking your phone ???',
+                "This phone is not going to fly away, don't worry"
+            ]
+    
+        }
+
+        try {
+            await AsyncStorage.setItem('HubData', JSON.stringify(defaultState));
+            console.log('RESET: ', defaultState)
+          } catch (error) {
+            console.log('ERROR: ', error)
+          }
+        
+        this.setState(defaultState)
+    }
+
     startClock = () => {
         this.setState({ clockIsOn: true })
         const startMin = this.state.minutes
@@ -88,8 +127,8 @@ class StateContainer extends Container {
                 //console.log(startMin)
                 if (state.minutes == 0 && state.seconds == 0) {
                     clearInterval(timer)
-                    this.gainPoints(startMin)
-                    return { clockIsOn: false, minutes: startMin }
+                    newHistory = this.gainPoints(startMin)
+                    return { clockIsOn: false, minutes: startMin, points: state.points + startMin, studyHistory: newHistory }
                 } else if (state.seconds == 0) {
                     if (state.minutes % 5 == 0) {
                         let index = Math.floor(Math.random() * this.state.quotes.length)
@@ -111,9 +150,9 @@ class StateContainer extends Container {
             tmp[dateStr] = 0
         }
         tmp[dateStr] += point
-        tmp = {...tmp, studyHistory: tmp, points: this.state.points + point}
-        this.setState(state => (tmp))
         this._writeState(tmp)
+        return tmp
+        
     }
 }
 

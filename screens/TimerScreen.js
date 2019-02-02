@@ -25,7 +25,8 @@ const quotes = [
 export default class TimerScreen extends React.Component {
 
     static navigationOptions = {
-        title: 'Timer',
+        // title: 'Timer',
+        header: null
     };
 
     constructor(props) {
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flex: 1,
         alignItems: 'stretch',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     circle: {
         height: Dimensions.get('window').width * 0.5,
