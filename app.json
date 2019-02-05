@@ -25,6 +25,9 @@
     "ios": {
       "supportsTablet": true
     },
+    "android": {
+      "package": "com.maks.istudy"
+    },
     "description": "An app for people who wants to study"
   }
 }

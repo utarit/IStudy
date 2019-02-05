@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { Subscribe } from 'unstated';
-import { Content, List, ListItem, Text, Right, Icon, Body, Form, Item, Input } from 'native-base';
+import { List, ListItem, Text, Right, Icon, Body, Form, Item, Input, Button } from 'native-base';
 
 
 import StateContainer from '../state/StateContainer';

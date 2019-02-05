@@ -3,17 +3,10 @@ import { AsyncStorage} from 'react-native';
 
 class StateContainer extends Container {
     state = {
-        username: "utarit",
-        points: 140,
-        studyGroup: 'CengoTayfa',
-        studyHistory: {
-            "Tue Jan 27 2019": 120,
-            "Tue Jan 22 2019": 120,
-            "Wed Jan 16 2019": 150,
-            "Sat Jan 19 2019": 70,
-            "Mon Jan 21 2017": 50,
-            "Wed Jan 23 2019": 30,
-        },
+        username: "Anonym",
+        points: 0,
+        studyGroup: 'Newbie',
+        studyHistory: {},
         minutes: 25,
         seconds: 0,
         clockIsOn: false,
@@ -81,16 +74,16 @@ class StateContainer extends Container {
 
     resetData = async () => {
         const defaultState = {
-            username: "utarit",
-            points: 140,
-            studyGroup: 'CengoTayfa',
+            username: "Anonym",
+            points: 0,
+            studyGroup: 'Newbie',
             studyHistory: {
-                "Tue Jan 27 2019": 120,
-                "Tue Jan 22 2019": 120,
-                "Wed Jan 16 2019": 150,
-                "Sat Jan 19 2019": 70,
-                "Mon Jan 21 2017": 50,
-                "Wed Jan 23 2019": 30,
+                // "Tue Jan 27 2019": 120,
+                // "Tue Jan 22 2019": 120,
+                // "Wed Jan 16 2019": 150,
+                // "Sat Jan 19 2019": 70,
+                // "Mon Jan 21 2017": 50,
+                // "Wed Jan 23 2019": 30,
             },
             minutes: 25,
             seconds: 0,
@@ -177,6 +170,12 @@ class StateContainer extends Container {
         tmp.splice(index, 1)
         this.setState({quotes: tmp})
         let tmpState = {...this.state, quotes: tmp}
+        this._updateData(tmpState)
+    }
+
+    changeUsername = (username) => {
+        this.setState({username: username})
+        let tmpState = {...this.state, username: username}
         this._updateData(tmpState)
     }
 }

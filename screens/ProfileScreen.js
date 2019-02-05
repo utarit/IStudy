@@ -11,8 +11,10 @@ import {
 
 } from 'react-native';
 import { Icon, Button } from 'native-base';
+import DialogInput from 'react-native-dialog-input';
 import { Subscribe } from 'unstated';
 import PureChart from 'react-native-pure-chart';
+
 import StateContainer from '../state/StateContainer';
 
 // const profile = {
@@ -23,7 +25,7 @@ import StateContainer from '../state/StateContainer';
 // }
 
 const ppWidth = 120
-const {height, width} = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
 function isEarly(a, b) {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -45,19 +47,16 @@ export default class ProfileScreen extends React.Component {
         // title: 'Profile',
     };
 
+    constructor(props) {
+        super(props)
+        this.state = {
+            isDialogVisible: false
+        }
+    }
 
-
-    // studyList = (history) => {
-    //     const hist = Object.entries(history)
-    //     return hist.map((entry) => {
-
-    //         console.log(label)
-    //         return (
-    //             <Text key={label}>{label}: {entry[1]}</Text>
-    //         )
-    //     })
-
-    // }
+    showDialog = () => {
+        this.setState({ isDialogVisible: true })
+    }
 
     render() {
 
@@ -66,7 +65,7 @@ export default class ProfileScreen extends React.Component {
             <Subscribe to={[StateContainer]}>
                 {
                     (profile) => {
-                        
+
 
                         const historyData = Object.entries(profile.state.studyHistory).map(entry => {
                             let labelArr = entry[0].split(' ')
@@ -104,9 +103,11 @@ export default class ProfileScreen extends React.Component {
                                 <View style={styles.profileContainer}>
                                     <ImageBackground style={{ width: '100%' }} source={require("../assets/pp_back.jpg")} >
                                         <View style={styles.infoContainer}>
-                                            <Text style={{ fontSize: 50, fontWeight: 'bold', color: 'white' }}>{profile.state.username}</Text>
+                                            <TouchableOpacity onPress={() => {this.showDialog()}}>
+                                                <Text style={{ fontSize: 50, fontWeight: 'bold', color: 'white' }}>{profile.state.username}</Text>
+                                            </TouchableOpacity>
                                             <Text style={{ color: 'white', fontWeight: 'bold' }}>{profile.state.studyGroup}</Text>
-                                            <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 5}}>
+                                            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
                                                 <Icon type="AntDesign" name="star" style={{ color: 'white', fontSize: 20 }} />
                                                 <Text style={{ color: 'white', fontWeight: 'bold' }}> {profile.state.points}</Text>
                                             </View>
@@ -121,7 +122,7 @@ export default class ProfileScreen extends React.Component {
                                 </View>
 
                                 <View styles={styles.chartContainer}>
-                                <Text style={{fontSize: 30, marginLeft: 30, marginBottom: 15}}>Study History</Text>
+                                    <Text style={{ fontSize: 30, marginLeft: 30, marginBottom: 15 }}>Study History</Text>
                                     <PureChart
                                         clock={profile.state.clockIsOn}
                                         numberOfYAxisGuideLine={10}
@@ -138,12 +139,29 @@ export default class ProfileScreen extends React.Component {
                                     //   }}
                                     />
                                 </View>
-                                <TouchableOpacity onPress={profile.resetData}><Text>RESET DATA</Text></TouchableOpacity>
-                                <TouchableOpacity onPress={
-                                    () => {
-                                        this.props.navigation.navigate('Quotes')
-                                    }
-                                }><Text>QUOTES</Text></TouchableOpacity>
+                                <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
+                                    <Button style={styles.buttonStyle} block warning onPress={
+                                        () => {
+                                            this.props.navigation.navigate('Quotes')
+                                        }
+                                    }>
+                                        <Text>Quotes</Text>
+                                    </Button>
+                                    <Button style={styles.buttonStyle} block danger onPress={() => { profile.resetData() }}>
+                                        <Text>RESET DATA</Text>
+                                    </Button>
+                                </View>
+                                <DialogInput isDialogVisible={this.state.isDialogVisible}
+                                    title={"Username"}
+                                    message={"Change Your Username"}
+                                    hintInput={profile.state.username}
+                                    submitInput={(inputText) => { 
+                                        profile.changeUsername(inputText)
+                                        this.setState({isDialogVisible: false})
+                                     }}
+                                    closeDialog={() => { this.setState({ isDialogVisible: false }) }}>
+                                </DialogInput>
+
                             </ScrollView>
                         )
                     }
@@ -155,10 +173,10 @@ export default class ProfileScreen extends React.Component {
 
 
 const styles = StyleSheet.create({
-    profileContainer: { 
-        flex: 2, 
-        marginBottom: 20, 
-        marginBottom: 100 
+    profileContainer: {
+        flex: 2,
+        marginBottom: 20,
+        marginBottom: 100
     },
     imageBorder: {
         borderWidth: 1,
@@ -177,7 +195,7 @@ const styles = StyleSheet.create({
     imageContainer: {
         position: 'relative',
         bottom: -60,
-        left: width/2 - ppWidth/2,
+        left: width / 2 - ppWidth / 2,
     },
     infoContainer: {
         alignItems: 'center',
@@ -185,5 +203,8 @@ const styles = StyleSheet.create({
     },
     chartContainer: {
         flex: 1,
+    },
+    buttonStyle: {
+        marginBottom: 20
     }
 })
