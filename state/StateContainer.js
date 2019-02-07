@@ -132,7 +132,7 @@ class StateContainer extends Container {
                     return { seconds: state.seconds - 1 }
                 }
             })
-        }, 100) //1000 olacak burası!!
+        }, 1000) //1000 olacak burası!!
     }
 
     gainPoints = (point) => {
